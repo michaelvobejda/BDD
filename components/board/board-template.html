@@ -10,7 +10,7 @@
                         <td ng-repeat="x in getSize() track by $index">
                             <p>{{x}}</p>
                             <p>{{y}}</p>
-                            <input type="text" id="space" maxlength="1" placeholder="?" size="1" value=""/>
+                            <input type="text" id="space" maxlength="1" placeholder="?" size="1" value="" onclick="spaceClicked()"/>
                         </td>
                     </tr>
     
@@ -22,7 +22,7 @@
 
 </table>
 
-
-<select id="size" ng-model="size" onchange="updateBoard()">
-    <option ng-repeat="x in getSizeOptions()" value="x"></option>
+<p>Select size:</p>
+<select id="selectSize" ng-model="size" ng-change="updateBoard(size)" data-ng-options="option for option in sizeOptions">
+    <!-- <option value="">Select size:</option> -->
 </select>

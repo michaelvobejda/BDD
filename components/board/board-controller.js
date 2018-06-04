@@ -3,16 +3,16 @@
 BDDapp.controller('BoardController', ['$scope', 
     function($scope) {
 
-        $scope.getSizeOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        $scope.sizeOptions = [1, 2, 3, 4, 5];
 
-        $scope.size = 3;
+        $scope.size = $scope.sizeOptions[2];
 
         $scope.getSize = function() {
             return new Array($scope.size);
         };
 
-        $scope.updateBoard = function() {
-            $scope.$apply();
+        $scope.updateBoard = function(newSize) {
+            $scope.size = newSize;
         }
         
     }]);
