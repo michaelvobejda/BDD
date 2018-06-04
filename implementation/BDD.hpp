@@ -15,9 +15,21 @@
 using namespace std;
 
 struct Node {
-    struct Node* hi;
-    struct Node* lo;
     size_t var;
+    Node* hi;
+    Node* lo;
+};
+
+template<>
+struct hash<Node>
+{
+    size_t
+    operator()(const Node & n) const
+    {
+        size_t v1 = (n.lo)->var;
+        size_t v2 = (n.hi)->var;
+        return hash<int>()((v1+v2)*(v1+v2+1)/2 + v1);
+    }
 };
 
 class BDD {
@@ -31,11 +43,10 @@ public:
      */
     
 private:
-    int numVars;
-    //Vector of tree nodes
-    vector<Node> T;
-    //Hash map from node to node index in vector
-    unordered_map<int, Node> H;
+    size_t numVars;
+    vector<Node> T; //Vector of tree nodes
+    unordered_map<Node, int> H; //Hash map from node to node index in vector
+    Node mk(size_t var, Node* hi, Node *lo); //Inserts node while making sure there are no duplicates.
 };
 
 #endif /* BDD_hpp */

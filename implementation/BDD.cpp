@@ -10,13 +10,21 @@
 using namespace std;
 
 BDD::BDD() {
-    numVars = 0;
-    //Add 0 and 1 terminal nodes
-    Node terminal;
-    terminal.var = 0;
-    terminal.hi = NULL;
-    terminal.lo = NULL;
+    //Initialize the BDD by inserting the 0 and 1 terminal nodes.
+    numVars = 1;
+    Node terminal = {numVars, NULL, NULL};
     T.push_back(terminal);
-    terminal.var = 1;
     T.push_back(terminal);
+}
+
+Node BDD::mk(size_t var, Node *hi, Node* lo) {
+    Node n = {var, hi , lo};
+    if(hi == lo) {
+        return *lo;
+//    } else if(H.find(n) == H.end()) {
+        
+    } else {
+   
+    }
+    return n;
 }
