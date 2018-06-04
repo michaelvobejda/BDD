@@ -1,0 +1,41 @@
+.board, .box {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.board {
+    height: 300px;
+    width: 300px;
+}
+
+.box {
+    height: 100px;
+    width: 100px;
+    border: 1px solid black;
+    /* cellspacing: 0px; */
+}
+
+tr td {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+}
+
+#space {
+    font-size: 40px;
+    text-align: center;
+    /* border: none; */
+    color: transparent;
+    text-shadow: 0 0 0 black;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+    border-spacing: 0px;
+}
+
+#space:hover {
+    border-color: black;
+    background-color: lightgreen;
+
+}

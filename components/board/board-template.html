@@ -1,0 +1,28 @@
+
+<table class="board">
+    <tr ng-repeat="x in getSize() track by $index">
+        <td ng-repeat="x in getSize() track by $index">
+
+            <table class="box">
+                <form> 
+                    
+                    <tr ng-repeat="x in getSize() track by $index">
+                        <td ng-repeat="x in getSize() track by $index">
+                            <p>{{x}}</p>
+                            <p>{{y}}</p>
+                            <input type="text" id="space" maxlength="1" placeholder="?" size="1" value=""/>
+                        </td>
+                    </tr>
+    
+                </form>
+            </table>
+
+        </td>
+    </tr>
+
+</table>
+
+
+<select id="size" ng-model="size" onchange="updateBoard()">
+    <option ng-repeat="x in getSizeOptions()" value="x"></option>
+</select>
