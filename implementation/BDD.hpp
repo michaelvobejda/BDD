@@ -19,12 +19,15 @@ struct Node {
     Node* hi;
     Node* lo;
     bool operator ==(const Node & n) const {
-        return (var == n.var && hi == n.hi && lo == n.lo);
+        size_t v_lo = n.lo != NULL ? (n.lo)->var : -1;
+        size_t v_hi = n.hi != NULL ? (n.hi)->var : -1;
+        size_t me_lo = lo ? lo->var : -1;
+        size_t me_hi = hi ? hi->var : -1;
+        return (var == n.var && me_lo == v_lo && me_hi == v_hi);
     }
     
     Node(): id(0), var(0), value(0), hi(NULL), lo(NULL) {}
 };
-
 
 //define std::hash on Nodes
 template<>
@@ -35,10 +38,10 @@ struct hash<Node>
     {
         size_t v1 = n.lo != NULL ? (n.lo)->var : -1;
         size_t v2 = n.hi != NULL ? (n.hi)->var : -1;
-        return hash<int>()((v1+v2)*(v1+v2+1)/2 + v1);
+        size_t v3 = n.var;
+        int p = (v1+v2)*(v1+v2+1)/2 + v1;
+        return hash<int>()(v3+p)*(v3+p+1)/2 + v3;
     }
-    
-
 };
 
 
@@ -48,8 +51,6 @@ public:
     explicit BDD();
     ~BDD();
     /* need to implement:
-     - build(t): constructs a BDD using given boolean expression
-     - and(bdd): AND's two bdds
      - satisfy_one
      */
     int getSize();

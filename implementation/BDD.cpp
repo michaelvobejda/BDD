@@ -5,6 +5,7 @@
 
 #include "BDD.hpp"
 #include <iostream>
+#include <climits>
 
 using namespace std;
 
@@ -15,10 +16,12 @@ BDD::BDD() {
     numVars = 0;
     //Initialize the BDD by inserting the 0 and 1 terminal nodes.
     Node *terminal0 = new Node;
+    //terminal0->var = INT_MAX;
     Tree.push_back(terminal0);
     Node *terminal1 = new Node;
     terminal1->id = 1;
     terminal1->value = 1;
+    //terminal1->var = INT_MAX;
     Tree.push_back(terminal1);
     H.insert(pair<Node, size_t>(*terminal0, 0));
     H.insert(pair<Node, size_t>(*terminal1, 1));
@@ -30,7 +33,10 @@ BDD::~BDD() {
 }
 
 ostream& operator<<(ostream& os, const BDD& bdd) {
-    os << bdd.numVars;
+    for(size_t i = 0; i < bdd.Tree.size(); i++) {
+        os << "Var: " << bdd.Tree[i]->var <<  ", Value: " << bdd.Tree[i]->value << '\n';
+    }
+    os << "num vars " << bdd.numVars << '\n';
     return os;
 }
 
@@ -41,15 +47,15 @@ Node* BDD::conjunction(class BDD b) {
     return apply(AND, b);
 }
 
-void BDD::addVariable(int num) {
-    //make this private
-    if(numVars > 0) return;
-    mk(num, Tree[1], Tree[0]);
-}
-
 Node* BDD::disjunction(class BDD b) {
     return apply(OR, b);
 }
+
+void BDD::addVariable(int num) {
+    //adds variable with index num. changes terminals to make sure they are last in variable ordering.
+    mk(num, Tree[1], Tree[0]);
+}
+
 
 /*
  * Private functions
@@ -59,10 +65,11 @@ Node* BDD::disjunction(class BDD b) {
  Creates a new node. Checks hash table to make sure node doesn't already exist.
  */
 Node *BDD::mk(size_t var, Node *hi, Node* lo) {
-    if(var > numVars) {
-        numVars++;
-        var = numVars;
-    }
+//    if(var > numVars) {
+//        numVars = var + 1;
+//        Tree[1]->var = numVars;
+//        Tree[0]->var = numVars;
+//    }
     Node *n = new Node;
     n->id = Tree.size();
     n->var = var;
@@ -74,10 +81,12 @@ Node *BDD::mk(size_t var, Node *hi, Node* lo) {
     }
     auto found = H.find(*n);
     if(found != H.end()) {
+        //free(n);
         return Tree[found->second];
     }
     Tree.push_back(n);
     H.insert(pair<Node, size_t>(*n, Tree.size()-1));
+
     return n;
 }
 
@@ -119,21 +128,39 @@ int operate(int op, int v1, int v2) {
     return -1;
 }
 
+/* Applies a binary operation to two BDDs using dynamic programming */
+Node *BDD::apply(int op, BDD b) {
+    vector<vector<Node *>> table(getSize(), vector<Node *>(b.getSize(), NULL));
+    Node u1 = getRoot();
+    Node u2 = b.getRoot();
+    return applyHelper(op, u1, u2, table);
+}
+
 Node *BDD::applyHelper(int op, Node u1, Node u2, vector<vector<Node *>>& table) {
-    Node *cached = table[u1.id][u2.id];
-    if(cached !=  NULL) return cached;
-    //replace this below with a mk statement
-//    Node *u = new Node;
-    Node *u;
-    int res = operate(op, u1.value, u2.value);
-    if(res != -1) {
-        u = new Node;
-        numVars++; //make sure this step is correct
-        u->var =  numVars;
-        u->value = res;
-        u->id = res;
-        //free Tree[u->value]; ???
-        Tree[res] = u;
+    Node *memo = table[u1.id][u2.id];
+    if(memo) return memo;
+//    Node *u;
+//    int result = operate(op, u1.value, u2.value); //apply operation to node values to check if they're both terminal
+//    if(result != -1) {
+//        u = new Node;
+////        numVars++; //make sure this step is correct
+//        u->value = result;
+//        u->id = result;
+//        //free Tree[u->value];
+//        Tree[result] = u;
+//        Tree[0]->var = numVars + 1;
+//        Tree[1]->var = numVars + 1;
+    Node * u;
+    if(u1.value >= 0 && u2.value >= 0) {
+//        u = new Node;
+        int result = operate(op, u1.value, u2.value);
+//        Tree[result]->value = result;
+        u = Tree[result];
+//        u->value = result;
+//        u->id = result;
+//        u->var = numVars;
+//        Tree[0]->var = numVars + 1;
+//        Tree[1]->var = numVars + 1;
     } else {
         if(u1.var == u2.var) {
             u = mk(u1.var, applyHelper(op, *(u1.lo), *(u2.lo), table), applyHelper(op, *(u1.hi), *(u2.hi), table));
@@ -145,12 +172,4 @@ Node *BDD::applyHelper(int op, Node u1, Node u2, vector<vector<Node *>>& table) 
     }
     table[u1.id][u2.id] = u;
     return u;
-}
-
-Node *BDD::apply(int op, BDD b) {
-    vector<vector<Node *>> table(getSize(), vector<Node *>(b.getSize(), NULL));
-    Node u1 = getRoot();
-    Node u2 = b.getRoot();
-    //don't forget to free memory from table
-    return applyHelper(op, u1, u2, table);
 }
