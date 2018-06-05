@@ -4,6 +4,13 @@
 using namespace std;
 
 int main() {
-    cout << "hello";
     BDD x;
+    cout << x;
+    x.addVariable(1);
+    cout << x;
+    BDD y;
+    y.addVariable(2);
+    cout << y;
+    x.conjunction(y);
+    cout << x;
 }
