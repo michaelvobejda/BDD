@@ -1,7 +1,5 @@
 //
 //  BDD.hpp
-//  
-//
 //  Created 6/3/18.
 //
 
@@ -15,11 +13,20 @@
 using namespace std;
 
 struct Node {
+    size_t id;
     size_t var;
+    int value;
     Node* hi;
     Node* lo;
+    bool marked;
+    bool operator ==(const Node & n) const {
+        return (var == n.var && hi == n.hi && lo == n.lo);
+    }
+
 };
 
+
+//define std::hash on Nodes
 template<>
 struct hash<Node>
 {
@@ -30,7 +37,10 @@ struct hash<Node>
         size_t v2 = (n.hi)->var;
         return hash<int>()((v1+v2)*(v1+v2+1)/2 + v1);
     }
+    
+
 };
+
 
 class BDD {
 public:
@@ -41,12 +51,17 @@ public:
      - and(bdd): AND's two bdds
      - satisfy_one
      */
+    int getSize();
+    
     
 private:
-    size_t numVars;
-    vector<Node> T; //Vector of tree nodes
-    unordered_map<Node, int> H; //Hash map from node to node index in vector
+    int numVars;
+    vector<Node> Tree; //Vector of tree nodes
+    unordered_map<Node, size_t> H; //Hash map from node to node index in vector
     Node mk(size_t var, Node* hi, Node *lo); //Inserts node while making sure there are no duplicates.
+    Node *apply(int op, BDD b);
+    Node *applyHelper(int op, Node u1, Node u2, vector<vector<Node *>>& table);
+    Node getRoot();
 };
 
 #endif /* BDD_hpp */

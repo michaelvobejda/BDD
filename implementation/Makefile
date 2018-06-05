@@ -14,3 +14,6 @@ BDD.o: BDD.cpp BDD.hpp
 
 clean:
 	rm -f run-tests explore *.o *~
+
+
+BDD newbdd = bdd1.apply(AND, bdd2);
