@@ -1,19 +1,15 @@
 
-<table class="board">
-    <tr ng-repeat="x in getSize() track by $index">
-        <td ng-repeat="x in getSize() track by $index">
+<table id="board">
+    <tr ng-repeat="w in getSize()">
+        <td ng-repeat="x in getSize()">
 
             <table class="box">
                 <form> 
-                    
-                    <tr ng-repeat="x in getSize() track by $index">
-                        <td ng-repeat="x in getSize() track by $index">
-                            <p>{{x}}</p>
-                            <p>{{y}}</p>
-                            <input type="text" id="space" maxlength="1" placeholder="?" size="1" value="" onclick="spaceClicked()"/>
+                    <tr ng-repeat="y in getSize()">
+                        <td ng-repeat="z in getSize()">
+                            <input id="{{getId(w, x, y, z)}}" type="text" class="space" maxlength="1" placeholder="?" size="1" value="" ng-click="spaceClicked($event)" ng-model="currSpace" ng-change="spaceChanged($this)" />
                         </td>
                     </tr>
-    
                 </form>
             </table>
 
@@ -26,3 +22,13 @@
 <select id="selectSize" ng-model="size" ng-change="updateBoard(size)" data-ng-options="option for option in sizeOptions">
     <!-- <option value="">Select size:</option> -->
 </select>
+
+<button mat-fab ng-click="boardToString()">Print board</button>
+<br>
+<br>
+<br>
+<p>Input board:</p>
+<textarea ng-model="boardString"></textarea>
+<br>
+<button mat-fab ng-click="loadBoard(boardString)">Load board</button>
+
