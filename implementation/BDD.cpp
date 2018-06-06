@@ -29,7 +29,7 @@ BDD::BDD(int num) {
     Tree.push_back(terminal1);
     H.insert(pair<Node, size_t>(*terminal0, 0));
     H.insert(pair<Node, size_t>(*terminal1, 1));
-    mk(num, Tree[isNegated], Tree[!isNegated]);
+    root = mk(num, Tree[isNegated], Tree[!isNegated]);
 }
 
 //to do: implement deconstructor to free all allocated memory
@@ -101,7 +101,16 @@ int BDD::getSize() {
 }
 
 Node *BDD::getRoot() {
+   /* Node *root = Tree[0];
+    size_t minVar = INT_MAX;
+    for(size_t i = 0; i < Tree.size(); i++) {
+        if(Tree[i]->var <= minVar)  {
+            minVar = Tree[i]->var;
+            root = Tree[i];
+        }
+    }*/
     return root;
+//    return Tree[Tree.size()-1];
 }
 
 int operate(int op, int v1, int v2) {
@@ -147,12 +156,9 @@ Node *BDD::apply(int op, BDD b) {
     Node u1 = *getRoot();
     Node u2 = *(b.getRoot());
     Node* returnVal = applyHelper(op, u1, u2, table);
-    cout << "returnVal: " << returnVal->var << endl;
+    root = returnVal;
+//    cout << "returnVal: " << returnVal->var << endl;
     return returnVal;
-
-
-    // return applyHelper(op, u1, u2, table);
-    
 }
 
 
@@ -181,27 +187,29 @@ Node *BDD::applyHelper(int op, Node u1, Node u2, vector<vector<Node *>>& table) 
     return u;
 }
 
-bool BDD::solveOneHelper(Node *root) {
-    if (!root) {
+bool BDD::solveOneHelper(Node *cur) {
+    if (!cur) {
         return false;
     }
-    cout << "root var: " << root->var << endl;
+    cout << "root var: " << cur->var << endl;
     cout << "assignments: " << endl;
     for (pair<size_t, bool> element : assignments) {
         cout << element.first << " :: " << element.second << endl;
     }
 
-    if (!root->lo && !root->hi) {
-        return root->value; // if terminal, return value (0 or 1)
+    if (!cur->lo && !cur->hi) {
+        return cur->value; // if terminal, return value (0 or 1)
     }
-    if (solveOneHelper(root->lo)) {
+    if (solveOneHelper(cur->lo)) {
         cout << "lo returned true" << endl;
-        assignments[(root->lo)->var] = true;
+//        assignments[(cur->lo)->var] = true;
+        assignments[(cur->var)] = false;
         return true;
     }
-    if (solveOneHelper(root->hi)) {
+    if (solveOneHelper(cur->hi)) {
         cout << "hi returned true" << endl;
-        assignments[(root->hi)->var] = true;
+//        assignments[(cur->hi)->var] = true;
+        assignments[(cur->var)] = true;
         return true;
     } 
     return false;
@@ -209,6 +217,15 @@ bool BDD::solveOneHelper(Node *root) {
 
 unordered_map<size_t, bool> BDD::solveOne() {
     Node * root = getRoot();
+//    Node *root = Tree[0];
+//    size_t minVar = INT_MAX;
+//    for(size_t i = 0; i < Tree.size(); i++) {
+//        if(Tree[i]->var <= minVar)  {
+//            minVar = Tree[i]->var;
+//            root = Tree[i];
+//        }
+//    }
+//    cout << "dslf" << minVar << endl;
     // bool solvable = solveOneHelper(root, assignments);
     solveOneHelper(root);
     return assignments;

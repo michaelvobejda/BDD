@@ -19,8 +19,8 @@ struct Node {
     Node* hi;
     Node* lo;
     bool operator ==(const Node & n) const {
-        size_t v_lo = n.lo != NULL ? (n.lo)->var : -1;
-        size_t v_hi = n.hi != NULL ? (n.hi)->var : -1;
+        size_t v_lo = n.lo != NULL ? (n.lo)->id : -1;
+        size_t v_hi = n.hi != NULL ? (n.hi)->id : -1;
         size_t me_lo = lo ? lo->var : -1;
         size_t me_hi = hi ? hi->var : -1;
         return (var == n.var && me_lo == v_lo && me_hi == v_hi);
