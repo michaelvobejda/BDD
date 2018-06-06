@@ -39,7 +39,7 @@ void and_five_variables() {
     for(size_t i = 0; i < 4; i++) {
         bdds[0].conjunction(bdds[i+1]);
     }
-    // cout << bdds[0];
+//     cout << bdds[0];
 
     // Iterate over an unordered_map using range based for loop
     for (pair<size_t, bool> element : bdds[0].solveOne()) {
@@ -116,9 +116,9 @@ void or_two_and_BDD() {
 
 int main() {
 //     and_same_variable();
-//    xor_same_variable();
+    xor_same_variable();
 //     and_different_variables();
-     and_five_variables();
+//     and_five_variables();
 //     or_same_variable();
 //     or_different_variables();
 //     or_five_variables();

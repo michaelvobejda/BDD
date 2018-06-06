@@ -101,17 +101,16 @@ int BDD::getSize() {
 }
 
 Node *BDD::getRoot() {
-    Node *root = Tree[0];
+   /* Node *root = Tree[0];
     size_t minVar = INT_MAX;
     for(size_t i = 0; i < Tree.size(); i++) {
         if(Tree[i]->var <= minVar)  {
             minVar = Tree[i]->var;
             root = Tree[i];
         }
-    }
+    }*/
     return root;
 //    return Tree[Tree.size()-1];
-//    return root;
 }
 
 int operate(int op, int v1, int v2) {
@@ -157,12 +156,9 @@ Node *BDD::apply(int op, BDD b) {
     Node u1 = *getRoot();
     Node u2 = *(b.getRoot());
     Node* returnVal = applyHelper(op, u1, u2, table);
-    cout << "returnVal: " << returnVal->var << endl;
+    root = returnVal;
+//    cout << "returnVal: " << returnVal->var << endl;
     return returnVal;
-
-
-    // return applyHelper(op, u1, u2, table);
-    
 }
 
 
@@ -206,28 +202,30 @@ bool BDD::solveOneHelper(Node *cur) {
     }
     if (solveOneHelper(cur->lo)) {
         cout << "lo returned true" << endl;
-        assignments[(cur->lo)->var] = true;
+//        assignments[(cur->lo)->var] = true;
+        assignments[(cur->var)] = false;
         return true;
     }
     if (solveOneHelper(cur->hi)) {
         cout << "hi returned true" << endl;
-        assignments[(cur->hi)->var] = true;
+//        assignments[(cur->hi)->var] = true;
+        assignments[(cur->var)] = true;
         return true;
     } 
     return false;
 }
 
 unordered_map<size_t, bool> BDD::solveOne() {
-//    Node * root = getRoot();
-    Node *root = Tree[0];
-    size_t minVar = INT_MAX;
-    for(size_t i = 0; i < Tree.size(); i++) {
-        if(Tree[i]->var <= minVar)  {
-            minVar = Tree[i]->var;
-            root = Tree[i];
-        }
-    }
-    cout << "dslf" << minVar << endl;
+    Node * root = getRoot();
+//    Node *root = Tree[0];
+//    size_t minVar = INT_MAX;
+//    for(size_t i = 0; i < Tree.size(); i++) {
+//        if(Tree[i]->var <= minVar)  {
+//            minVar = Tree[i]->var;
+//            root = Tree[i];
+//        }
+//    }
+//    cout << "dslf" << minVar << endl;
     // bool solvable = solveOneHelper(root, assignments);
     solveOneHelper(root);
     return assignments;
