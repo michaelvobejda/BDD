@@ -47,8 +47,8 @@ void and_five_variables() {
 }
 
 int main() {
-    //and_same_variable();
-//    and_different_variables();
-    and_five_variables();
+//    and_same_variable();
+    and_different_variables();
+//    and_five_variables();
     
 }

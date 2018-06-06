@@ -16,7 +16,7 @@ using namespace std;
 #define OR 2
 
 BDD::BDD() {
-    numVars = 0;
+    isNegated = 0;
     //Initialize the BDD by inserting the 0 and 1 terminal nodes.
     Node *terminal0 = new Node;
     terminal0->var = INT_MAX;
@@ -42,7 +42,6 @@ ostream& operator<<(ostream& os, const BDD& bdd) {
         os << "Var: " << bdd.Tree[i]->var <<  ", Value: " << bdd.Tree[i]->value <<
         ", hi: " << hi << ", low: " << lo << '\n';
     }
-    //os << "num vars " << bdd.numVars << '\n';
     return os;
 }
 
@@ -57,9 +56,13 @@ Node* BDD::disjunction(class BDD b) {
     return apply(OR, b);
 }
 
+void negate() {
+    
+}
+
 void BDD::addVariable(int num) {
     //adds variable with index num. changes terminals to make sure they are last in variable ordering.
-    mk(num, Tree[0], Tree[1]);
+    mk(num, Tree[isNegated], Tree[!isNegated]);
 }
 
 
@@ -71,11 +74,6 @@ void BDD::addVariable(int num) {
  Creates a new node. Checks hash table to make sure node doesn't already exist.
  */
 Node *BDD::mk(size_t var, Node *lo, Node* hi) {
-//    if(var > numVars) {
-//        numVars = var + 1;
-//        Tree[1]->var = numVars;
-//        Tree[0]->var = numVars;
-//    }
     Node *n = new Node;
     n->id = Tree.size();
     n->var = var;
@@ -143,41 +141,23 @@ Node *BDD::apply(int op, BDD b) {
     return applyHelper(op, u1, u2, table);
 }
 
+
+
 Node *BDD::applyHelper(int op, Node u1, Node u2, vector<vector<Node *>>& table) {
     Node *memo = table[u1.id][u2.id];
     if(memo) return memo;
-//    Node *u;
-//    int result = operate(op, u1.value, u2.value); //apply operation to node values to check if they're both terminal
-//    if(result != -1) {
-//        u = new Node;
-////        numVars++; //make sure this step is correct
-//        u->value = result;
-//        u->id = result;
-//        //free Tree[u->value];
-//        Tree[result] = u;
-//        Tree[0]->var = numVars + 1;
-//        Tree[1]->var = numVars + 1;
     Node * u;
     int result = operate(op, u1.value, u2.value);
-    
     if (result != -1) { // result is a terminal
-    //if(u1.value >= 0 && u2.value >= 0) {
-//        u = new Node;
-        
-//        Tree[result]->value = result;
-        u = Tree[result];
-//        u->value = result;
-//        u->id = result;
-//        u->var = numVars;
-//        Tree[0]->var = numVars + 1;
-//        Tree[1]->var = numVars + 1;
+        if(!isNegated) {
+            u = Tree[result];
+        } else {
+            u = Tree[1-result];
+        }
     } else {
         if(u1.var == u2.var) {
             u = mk(u1.var, applyHelper(op, *(u1.lo), *(u2.lo), table), applyHelper(op, *(u1.hi), *(u2.hi), table));
         } else if(u1.var < u2.var) {
-//            u1.lo = applyHelper(op, *(u1.lo), u2, table);
-//            u1.hi = applyHelper(op, *(u1.hi), u2, table);
-//            u = &u1;
             u = mk(u1.var, applyHelper(op, *(u1.lo), u2, table), applyHelper(op, *(u1.hi), u2, table));
         } else {
             u = mk(u2.var, applyHelper(op, u1, *(u2.lo), table), applyHelper(op, u1, *(u2.hi), table));
