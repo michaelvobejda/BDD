@@ -29,7 +29,7 @@ BDD::BDD(int num) {
     Tree.push_back(terminal1);
     H.insert(pair<Node, size_t>(*terminal0, 0));
     H.insert(pair<Node, size_t>(*terminal1, 1));
-    mk(num, Tree[isNegated], Tree[!isNegated]);
+    root = mk(num, Tree[isNegated], Tree[!isNegated]);
 }
 
 //to do: implement deconstructor to free all allocated memory
@@ -101,7 +101,8 @@ int BDD::getSize() {
 }
 
 Node *BDD::getRoot() {
-    return root;
+    return Tree[Tree.size()-1];
+//    return root;
 }
 
 int operate(int op, int v1, int v2) {
