@@ -8,27 +8,27 @@ using namespace std;
 
 void and_same_variable() {
     BDD x(2);
-    cout << x;
+    //cout << x;
     BDD y(2);
-    cout << y << "conjunction: " << endl;
+    //cout << y << "conjunction: " << endl;
     x.conjunction(y);
     cout << x;
 }
 
 void and_different_variables() {
     BDD x(2);
-    cout << x;
+    //cout << x;
     BDD y(3);
-    cout << y << "conjunction: " << endl;
+    //cout << y << "conjunction: " << endl;
     x.conjunction(y);
     cout << x;
 }
 
 void xor_same_variable() {
     BDD x(2);
-    cout << x;
+    //cout << x;
     BDD y(2);
-    cout << y << "xor: " << endl;
+    //cout << y << "xor: " << endl;
     x.eor(y);
     cout << x;
 }
@@ -61,12 +61,12 @@ void and_five_variables() {
     for(size_t i = 0; i < 4; i++) {
         bdds[0].conjunction(bdds[i+1]);
     }
-//     cout << bdds[0];
+    cout << bdds[0];
 
     // Iterate over an unordered_map using range based for loop
-    for (pair<size_t, bool> element : bdds[0].solveOne()) {
-        cout << element.first << " :: " << element.second << endl;
-    }
+    // for (pair<size_t, bool> element : bdds[0].solveOne()) {
+    //     cout << element.first << " :: " << element.second << endl;
+    // }
 
 }
 
@@ -152,15 +152,28 @@ bool bddComp (BDD i, BDD j) {
     return (i.root)->var < (j.root)->var; }
 
 int main() {
-//     and_same_variable();
+    cout << "AND 2 same variable:" << endl;
+    and_same_variable();
+    cout << endl;
+    cout << "AND 2 different variables:" << endl;
+    and_different_variables();
+    cout << endl;
+    cout << "AND 5 different variables:" << endl;
+    and_five_variables();
+    cout << endl;
+
+    cout << "OR 5 different variables:" << endl;
+    or_five_variables();
+    cout << endl;
+    cout << "XOR 5 different variables" << endl;
+    xor_five_variables();
 //    xor_same_variable();
 //    xor_different_variables();
-//    xor_five_variables();
-//     and_different_variables();
-//     and_five_variables();
+
+
 //     or_same_variable();
 //     or_different_variables();
-//     or_five_variables();
+
 //    or_two_and_BDD();
     // cout << w;
     //and_time_test();
@@ -200,7 +213,6 @@ int main() {
     // Rule 2: Every row contains 1-9 exactly once
     BDD rule2;
     first = true;
-    vector<BDD> rows;
     for (int i = 1; i <= 9; i++) {
         for (int k = 1; k <= 9; k++) {
             variableNameBase = 100*i + k;
@@ -214,22 +226,16 @@ int main() {
             // XOR all 9 variables
             for (int c = 1; c < 9; c++) {
                 bdds[0].eor(bdds[c]);
-                
             }
-            rows.push_back(bdds[0]);
+
             // And it with the others
-//            if (first) {
-//                rule2 = bdds[0];
-//                first = false;
-//            } else {
-//                rule2.conjunction(bdds[0]);
-//            }
+            if (first) {
+                rule2 = bdds[0];
+                first = false;
+            } else {
+                rule2.conjunction(bdds[0]);
+            }
         }
-    }
-    
-    sort(rows.begin(), rows.end(), bddComp);
-    for(size_t i = 0; i < rows.size(); i++) {
-        rule2.conjunction(rows[i]);
     }
     cout << "Rule 2: done" << endl;
     
@@ -297,9 +303,7 @@ int main() {
         }
     }
     cout << "Rule 4: done" << endl;
-    
-    
-    
+      
     // And together the 4 rules
     BDD allRules = rule1;
     allRules.conjunction(rule2);
@@ -339,6 +343,7 @@ int main() {
         }
     }
     cout << boardString;
+>>>>>>> dbb3132165b40c5bc04af61e6c14119a1e7fc2c1
 }
 
 
