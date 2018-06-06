@@ -48,7 +48,7 @@ struct hash<Node>
 class BDD {
     friend ostream& operator<<(ostream& os, const BDD& bdd);
 public:
-    explicit BDD();
+    explicit BDD(int num);
     ~BDD();
     /* need to implement:
      - satisfy_one
@@ -56,8 +56,9 @@ public:
     int getSize();
     Node *conjunction(class BDD b);
     Node *disjunction(class BDD b);
+    Node *eor(class BDD b);
     void negate();
-    void addVariable(int num);
+    void setRoot(int num);
     
     
 private:

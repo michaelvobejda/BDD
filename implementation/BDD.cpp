@@ -14,8 +14,9 @@ using namespace std;
 
 #define AND 1
 #define OR 2
+#define XOR 3
 
-BDD::BDD() {
+BDD::BDD(int num) {
     isNegated = 0;
     //Initialize the BDD by inserting the 0 and 1 terminal nodes.
     Node *terminal0 = new Node;
@@ -28,6 +29,7 @@ BDD::BDD() {
     Tree.push_back(terminal1);
     H.insert(pair<Node, size_t>(*terminal0, 0));
     H.insert(pair<Node, size_t>(*terminal1, 1));
+    mk(num, Tree[isNegated], Tree[!isNegated]);
 }
 
 //to do: implement deconstructor to free all allocated memory
@@ -58,15 +60,13 @@ Node* BDD::disjunction(class BDD b) {
     return apply(OR, b);
 }
 
-void negate() {
-    
+Node* BDD::eor(class BDD b) {
+    return apply(XOR, b);
 }
 
-void BDD::addVariable(int num) {
-    //adds variable with index num. changes terminals to make sure they are last in variable ordering.
-    mk(num, Tree[isNegated], Tree[!isNegated]);
+void BDD::negate() {
+    isNegated = !isNegated;
 }
-
 
 /*
  * Private functions
@@ -129,6 +129,12 @@ int operate(int op, int v1, int v2) {
             else return -1;
         } else {
             return v1 | v2;
+        }
+    } else if(op == XOR) {
+        if(v1 == -1 || v2 == -1) {
+            return -1;
+        } else {
+            return (v1+v2)%2;
         }
     }
     return -1;
