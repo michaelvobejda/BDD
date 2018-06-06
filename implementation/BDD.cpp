@@ -29,7 +29,7 @@ BDD::BDD(int num) {
     Tree.push_back(terminal1);
     H.insert(pair<Node, size_t>(*terminal0, 0));
     H.insert(pair<Node, size_t>(*terminal1, 1));
-    mk(num, Tree[isNegated], Tree[!isNegated]);
+    root = mk(num, Tree[0], Tree[1]);
 }
 
 //to do: implement deconstructor to free all allocated memory
@@ -91,6 +91,9 @@ Node *BDD::mk(size_t var, Node *lo, Node* hi) {
         return Tree[found->second];
     }
     Tree.push_back(n);
+   /* if(root) {
+        if(var == root->var) root = n;
+    }*/
     H.insert(pair<Node, size_t>(*n, Tree.size()-1));
 
     return n;
@@ -98,6 +101,10 @@ Node *BDD::mk(size_t var, Node *lo, Node* hi) {
 
 int BDD::getSize() {
     return Tree.size();
+}
+
+Node *BDD::getLeaf() {
+    return Tree[Tree.size()-1];
 }
 
 Node *BDD::getRoot() {
@@ -142,17 +149,13 @@ int operate(int op, int v1, int v2) {
 
 /* Applies a binary operation to two BDDs using dynamic programming */
 Node *BDD::apply(int op, BDD b) {
-//    vector<Node *> newTree;
     vector<vector<Node *>> table(getSize(), vector<Node *>(b.getSize(), NULL));
     Node u1 = *getRoot();
     Node u2 = *(b.getRoot());
     Node* returnVal = applyHelper(op, u1, u2, table);
     cout << "returnVal: " << returnVal->var << endl;
+    cout << "root var " <<  root->var << ", root hi" << root->hi << ", root lo " << root->lo << endl;
     return returnVal;
-
-
-    // return applyHelper(op, u1, u2, table);
-    
 }
 
 
@@ -160,56 +163,60 @@ Node *BDD::apply(int op, BDD b) {
 Node *BDD::applyHelper(int op, Node u1, Node u2, vector<vector<Node *>>& table) {
     Node *memo = table[u1.id][u2.id];
     if(memo) return memo;
-    Node * u;
+    Node *u;
     int result = operate(op, u1.value, u2.value);
     if (result != -1) { // result is a terminal
-        if(!isNegated) {
+        u = Tree[result];
+        /*if(!isNegated) {
             u = Tree[result];
         } else {
             u = Tree[1-result];
-        }
+        }*/
     } else {
         if(u1.var == u2.var) {
             u = mk(u1.var, applyHelper(op, *(u1.lo), *(u2.lo), table), applyHelper(op, *(u1.hi), *(u2.hi), table));
         } else if(u1.var < u2.var) {
             u = mk(u1.var, applyHelper(op, *(u1.lo), u2, table), applyHelper(op, *(u1.hi), u2, table));
+//            if(root->var == u1.var) root = u;
         } else {
             u = mk(u2.var, applyHelper(op, u1, *(u2.lo), table), applyHelper(op, u1, *(u2.hi), table));
+//            if(root->var == u2.var) root = u;
         }
     }
     table[u1.id][u2.id] = u;
     return u;
 }
 
-bool BDD::solveOneHelper(Node *root) {
-    if (!root) {
+bool BDD::solveOneHelper(Node *curr) {
+    if (!curr) {
         return false;
     }
-    cout << "root var: " << root->var << endl;
+    cout << "root var: " << curr->var << endl;
     cout << "assignments: " << endl;
     for (pair<size_t, bool> element : assignments) {
         cout << element.first << " :: " << element.second << endl;
     }
 
-    if (!root->lo && !root->hi) {
-        return root->value; // if terminal, return value (0 or 1)
+    if (!curr->lo && !curr->hi) {
+        return curr->value; // if terminal, return value (0 or 1)
     }
-    if (solveOneHelper(root->lo)) {
+    if (solveOneHelper(curr->lo)) {
         cout << "lo returned true" << endl;
-        assignments[(root->lo)->var] = true;
+        assignments[(curr->lo)->var] = true;
         return true;
     }
-    if (solveOneHelper(root->hi)) {
+    if (solveOneHelper(curr->hi)) {
         cout << "hi returned true" << endl;
-        assignments[(root->hi)->var] = true;
+        assignments[(curr->hi)->var] = true;
         return true;
     } 
     return false;
 }
 
 unordered_map<size_t, bool> BDD::solveOne() {
-    Node * root = getRoot();
     // bool solvable = solveOneHelper(root, assignments);
-    solveOneHelper(root);
+//    cout << "root: " << root->var << endl;
+    
+    solveOneHelper(getRoot());
     return assignments;
 }

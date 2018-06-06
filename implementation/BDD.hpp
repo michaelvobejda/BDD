@@ -55,6 +55,7 @@ public:
      */
     int getSize();
     Node *getRoot();
+    Node *getLeaf();
     Node *conjunction(class BDD b);
     Node *disjunction(class BDD b);
     Node *eor(class BDD b);
