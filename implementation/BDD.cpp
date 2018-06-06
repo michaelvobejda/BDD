@@ -139,8 +139,14 @@ Node *BDD::apply(int op, BDD b) {
 //    vector<Node *> newTree;
     vector<vector<Node *>> table(getSize(), vector<Node *>(b.getSize(), NULL));
     Node u1 = *getRoot();
-    Node u2 = *b.getRoot();
-    return applyHelper(op, u1, u2, table);
+    Node u2 = *(b.getRoot());
+    Node* returnVal = applyHelper(op, u1, u2, table);
+    cout << "returnVal: " << returnVal->var << endl;
+    return returnVal;
+
+
+    // return applyHelper(op, u1, u2, table);
+    
 }
 
 
