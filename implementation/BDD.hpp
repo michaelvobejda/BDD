@@ -58,6 +58,8 @@ public:
     Node *disjunction(class BDD b);
     void negate();
     void addVariable(int num);
+    std::unordered_map<size_t, bool> solveOne();
+
     
     
 private:
@@ -67,7 +69,9 @@ private:
     Node *mk(size_t var, Node* hi, Node *lo); //Inserts node while making sure there are no duplicates.
     Node *apply(int op, BDD b);
     Node *applyHelper(int op, Node u1, Node u2, vector<vector<Node *>>& table);
-    Node getRoot();
+    Node *getRoot();
+    unordered_map<size_t, bool> assignments;
+    bool solveOneHelper(Node *root);
 };
 
 #endif /* BDD_hpp */

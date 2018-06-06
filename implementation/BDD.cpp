@@ -59,7 +59,7 @@ Node* BDD::disjunction(class BDD b) {
 }
 
 void negate() {
-    
+
 }
 
 void BDD::addVariable(int num) {
@@ -100,8 +100,8 @@ int BDD::getSize() {
     return Tree.size();
 }
 
-Node BDD::getRoot() {
-    return *Tree[Tree.size()-1];
+Node *BDD::getRoot() {
+    return Tree[Tree.size()-1];
 }
 
 int operate(int op, int v1, int v2) {
@@ -138,8 +138,8 @@ int operate(int op, int v1, int v2) {
 Node *BDD::apply(int op, BDD b) {
 //    vector<Node *> newTree;
     vector<vector<Node *>> table(getSize(), vector<Node *>(b.getSize(), NULL));
-    Node u1 = getRoot();
-    Node u2 = b.getRoot();
+    Node u1 = *getRoot();
+    Node u2 = *b.getRoot();
     return applyHelper(op, u1, u2, table);
 }
 
@@ -167,4 +167,29 @@ Node *BDD::applyHelper(int op, Node u1, Node u2, vector<vector<Node *>>& table) 
     }
     table[u1.id][u2.id] = u;
     return u;
+}
+
+bool BDD::solveOneHelper(Node *root) {
+    if (!root) {
+        return false;
+    }
+    if (!root->lo && !root->hi) {
+        return root->value; // if terminal, return value (0 or 1)
+    }
+    if (solveOneHelper(root->lo)) {
+        assignments[(root->lo)->var] = true;
+        return true;
+    }
+    if (solveOneHelper(root->hi)) {
+        assignments[(root->hi)->var] = true;
+        return true;
+    } 
+    return false;
+}
+
+unordered_map<size_t, bool> BDD::solveOne() {
+    Node * root = getRoot();
+    // bool solvable = solveOneHelper(root, assignments);
+    solveOneHelper(root);
+    return assignments;
 }

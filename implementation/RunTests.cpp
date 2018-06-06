@@ -27,13 +27,19 @@ void and_different_variables() {
 
 void and_five_variables() {
     BDD bdds[5];
-    for(size_t i = 2; i < 7; i++) {
-        bdds[i].addVariable(i);
+    for(size_t i = 1; i < 5; i++) {
+        bdds[i].addVariable(i+2);
     }
-    for(size_t i = 2; i < 6; i++) {
-        bdds[2].conjunction(bdds[i+1]);
+    for(size_t i = 1; i < 4; i++) {
+        bdds[0].conjunction(bdds[i+1]);
     }
-    cout << bdds[2];
+    // cout << bdds[2];
+
+    // Iterate over an unordered_map using range based for loop
+    for (pair<size_t, bool> element : bdds[0].solveOne()) {
+        cout << element.first << " :: " << element.second << endl;
+    }
+
 }
 
 void or_same_variable() {
@@ -56,13 +62,18 @@ void or_different_variables() {
 
 void or_five_variables() {
     BDD bdds[5];
-    for(size_t i = 2; i < 7; i++) {
-        bdds[i].addVariable(i);
+    for(size_t i = 1; i < 5; i++) {
+        bdds[i].addVariable(i+2);
     }
-    for(size_t i = 2; i < 6; i++) {
-        bdds[2].disjunction(bdds[i+1]);
+    for(size_t i = 1; i < 4; i++) {
+        bdds[0].disjunction(bdds[i+1]);
     }
-    cout << bdds[2];
+    // cout << bdds[2];
+
+    // Iterate over an unordered_map using range based for loop
+    for (pair<size_t, bool> element : bdds[0].solveOne()) {
+        cout << element.first << " :: " << element.second << endl;
+    }
 }
 
 void or_two_and_BDD() {
@@ -79,7 +90,12 @@ void or_two_and_BDD() {
     y.conjunction(z);
 
     w.disjunction(y);
-    cout << w;
+    // cout << w;
+
+    // Iterate over an unordered_map using range based for loop
+    for (pair<size_t, bool> element : w.solveOne()) {
+        cout << element.first << " :: " << element.second << endl;
+    }
 }
 
 void and_two_or_BDD() {
@@ -96,16 +112,23 @@ void and_two_or_BDD() {
     y.disjunction(z);
 
     w.conjunction(y);
-    cout << w;
+    // cout << w;
+
+    // Iterate over an unordered_map using range based for loop
+    for (pair<size_t, bool> element : w.solveOne()) {
+        cout << element.first << " :: " << element.second << endl;
+    }
+
+
 }
 
 int main() {
     // and_same_variable();
     // and_different_variables();
-    // and_five_variables();
+    and_five_variables();
     // or_same_variable();
     // or_different_variables();
     // or_five_variables();
-    or_two_and_BDD();
+    // or_two_and_BDD();
     // and_two_or_BDD();
 }
