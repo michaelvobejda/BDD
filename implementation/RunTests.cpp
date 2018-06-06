@@ -30,8 +30,27 @@ void xor_same_variable() {
     cout << x;
 }
 
+void xor_different_variables() {
+    BDD x(2);
+    cout << x;
+    BDD y(3);
+    cout << y << "xor: " << endl;
+    x.eor(y);
+    cout << x;
+}
+
+void xor_five_variables() {
+    vector<BDD> bdds;
+    for(size_t i = 0; i < 5; i++) {
+        bdds.push_back(BDD(i+2));
+    }
+    for(size_t i = 0; i < 4; i++) {
+        bdds[0].eor(bdds[i+1]);
+    }
+    cout << bdds[0];
+}
+
 void and_five_variables() {
-//    BDD bdds[5];
     vector<BDD> bdds;
     for(size_t i = 0; i < 5; i++) {
         bdds.push_back(BDD(i+2));
@@ -116,7 +135,9 @@ void or_two_and_BDD() {
 
 int main() {
 //     and_same_variable();
-    xor_same_variable();
+//    xor_same_variable();
+//    xor_different_variables();
+    xor_five_variables();
 //     and_different_variables();
 //     and_five_variables();
 //     or_same_variable();

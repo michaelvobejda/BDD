@@ -157,7 +157,6 @@ Node *BDD::apply(int op, BDD b) {
     Node u2 = *(b.getRoot());
     Node* returnVal = applyHelper(op, u1, u2, table);
     root = returnVal;
-//    cout << "returnVal: " << returnVal->var << endl;
     return returnVal;
 }
 
@@ -202,13 +201,11 @@ bool BDD::solveOneHelper(Node *cur) {
     }
     if (solveOneHelper(cur->lo)) {
         cout << "lo returned true" << endl;
-//        assignments[(cur->lo)->var] = true;
         assignments[(cur->var)] = false;
         return true;
     }
     if (solveOneHelper(cur->hi)) {
         cout << "hi returned true" << endl;
-//        assignments[(cur->hi)->var] = true;
         assignments[(cur->var)] = true;
         return true;
     } 
