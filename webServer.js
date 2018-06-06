@@ -3,6 +3,9 @@
 /* jshint node: true */
 
 var express = require('express');
+var cors = require('cors')
+
+
 
 var portno = 3000;   // Port number to use
 
@@ -11,6 +14,9 @@ var app = express();
 // We have the express static module (http://expressjs.com/en/starter/static-files.html) do all
 // the work for us.
 app.use(express.static(__dirname));
+
+app.use(cors({credentials: true, origin: true}))
+
 
 app.get('/', function (request, response) {
   response.send('Simple web server of files from ' + __dirname);

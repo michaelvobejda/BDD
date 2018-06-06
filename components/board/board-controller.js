@@ -2,8 +2,8 @@
 
 // var jquery = require('jquery');
 
-BDDapp.controller('BoardController', ['$scope', 
-    function($scope) {
+BDDapp.controller('BoardController', ['$scope', '$http',
+    function($scope, $http) {
 
         $scope.sizeOptions = [1, 2, 3, 4, 5];
 
@@ -82,6 +82,7 @@ BDDapp.controller('BoardController', ['$scope',
                 }
             }
             console.log(str);
+            return str;
         }
 
         function sleep(ms) {
@@ -111,18 +112,45 @@ BDDapp.controller('BoardController', ['$scope',
             }
         }
 
-        $scope.solve = function(boardString) {
-            var boardString = $scope.boardToString();
-            $.ajax({
-                type: "POST",
-                url: "/python_eda",
-                data: { param: boardString },
-                success: function(response) {
-                    console.log('response:')
-                    console.log(response);
-                    $scope.loadBoard(response)
-                }
-            });
+        $scope.solve = function() {
+            var board = $scope.boardToString();
+            // $http.get('http://localhost:3000/python_eda').success(function(response) {
+            //     console.log('response:')
+            //     console.log(response);
+            //     $scope.loadBoard(response)
+            // });
+            console.log('boardString')
+            // console.log(boardString)
+
+            $http({
+                method: 'POST',
+                url: 'http://127.0.0.1:5000/', 
+                data: board,
+                // params: {
+                //     board: board,
+                // }
+            }).then(function successCallback(response) {
+                // this callback will be called asynchronously
+                // when the response is available
+                console.log('response:')
+                console.log(response);
+                $scope.loadBoard(response)
+                }, function errorCallback(response) {
+                  // called asynchronously if an error occurs
+                  // or server returns response with an error status.
+                  console.log('error:')
+                  console.log(response);
+                });
+            // $.ajax({
+            //     type: "POST",
+            //     url: "localhost:3000/python_eda",
+            //     data: { param: boardString },
+            //     success: function(response) {
+            //         console.log('response:')
+            //         console.log(response);
+            //         $scope.loadBoard(response)
+            //     }
+            // });
         }
         
     }]);

@@ -1,10 +1,28 @@
 from pyeda.inter import *
-from flask import Flask
+from flask import Flask, request
+from flask_cors import CORS
+import json
+
 app = Flask(__name__)
 
-@app.route('/python_eda')
-def solve_puzzle(board):
-    return display(solve(board))
+CORS(app)
+
+
+
+@app.route('/', methods=['POST'])
+def solve_puzzle():
+    print('yo')
+    print(request.data)
+    # x = (request.data).decode('utf-8')
+    # print('x')
+    # print(x)
+    # print(type(x))
+    # print(json.loads(request.data))
+    # x = json.loads(request.data)
+    # y = json.loads(x)
+    print('y')
+    # print(y)
+    return display(solve(str(request.data)))
 
 
 DIGITS = "123456789"
@@ -99,3 +117,7 @@ def solve(grid):
 
 
 # display(solve(grid1))
+
+if __name__ == "__main__":
+    # app.run(host="localhost",port=3000)
+    app.run()
