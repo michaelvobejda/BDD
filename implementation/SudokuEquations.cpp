@@ -1,21 +1,23 @@
 #include "BDD.hpp"
 #include <iostream>
-#include <vector>
+#include <string>
 
 using namespace std;
 
 int main() {
+    int variableName;
+    int variableNameBase;
     // Rule 1: Every square has exactly one digit in it
-    String variableName = "";
     BDD rule1;
+    bool first = true;
     for (int i = 1; i <= 9; i++) {
         for (int j = 1; j <= 9; j++) {
-            variableName = int(str(i) + str(j));
+            variableNameBase = 100*i + 10*j;
             // For a given spot (i, j), 1 variable per value of k
             //bdds = BDD[10]; // 0th index will be empty
-            Vector<BDD> bdds;
+            vector<BDD> bdds;
             for (int k = 1; k <= 9; k++) {
-                variableName = int(str(variableName) + str(k))
+                variableName = variableNameBase + k;
                 bdds.push_back(BDD(variableName));
                 //bdds[i].addVariable(variableName);
             }
@@ -25,8 +27,9 @@ int main() {
             }
 
             // And it with the others
-            if (rule1 == null) {
+            if (first) {
                 rule1 = bdds[0];
+                first = false;
             } else {
                 rule1.conjunction(bdds[0]);
             }
@@ -35,14 +38,15 @@ int main() {
 
     // Rule 2: Every row contains 1-9 exactly once
     BDD rule2;
+    first = true;
     for (int i = 1; i <= 9; i++) {
         for (int k = 1; k <= 9; k++) {
-            variableName = int(str(i));
+            variableNameBase = 100*i;
             // For a given row i and digit k, one variable per row entry
             //bdds = BDD[10]; // 0th index will be empty
-            Vector<BDD> bdds;
+            vector<BDD> bdds;
             for (int j = 1; j <= 9; j++) {
-                variableName = int(str(variableName) + str(j) + str(k));
+                variableName = variableNameBase + 10*j + k;
                 //bdds[i].addVariable(variableName);
                 bdds.push_back(BDD(variableName));
             }
@@ -52,24 +56,27 @@ int main() {
             }
 
             // And it with the others
-            if (rule2 == null) {
+            if (first) {
                 rule2 = bdds[0];
+                first = false;
             } else {
                 rule2.conjunction(bdds[0]);
             }
         }
+        cout << "in i for loop" << endl;
     }
 
     // Rule 3: Every column contains 1-9 exactly once
     BDD rule3;
+    first = true;
     for (int j = 1; j <= 9; j++) {
         for (int k = 1; k <= 9; k++) {
-            // variableName = int(str(i));
+            // variableName = int(to_string(i));
             // For a given row i and digit k, one variable per row entry
             //bdds = BDD[10]; // 0th index will be empty
-            Vector<BDD> bdds;
+            vector<BDD> bdds;
             for (int i = 1; i <= 9; i++) {
-                variableName = int(str(i) + str(j) + str(k));
+                variableName = 100*i + 10*j + k;
                 bdds.push_back(BDD(variableName));
                 //bdds[i].addVariable(variableName);
             }
@@ -79,8 +86,9 @@ int main() {
             }
 
             // And it with the others
-            if (rule3 == null) {
+            if (first) {
                 rule3 = bdds[0];
+                first = false;
             } else {
                 rule3.conjunction(bdds[0]);
             }
@@ -89,6 +97,7 @@ int main() {
 
     // Rule 4: 3x3 grid contains 1-9 exactly once
     BDD rule4;
+    first = true;
     for (int start_row = 1; start_row <= 7; start_row += 3) { // 1, 4, 7
         for (int start_col = 1; start_col <= 7; start_col += 3) { // 1, 4, 7
             // Iterate along 3x3 grid starting at (start_row, start_col)
@@ -96,9 +105,9 @@ int main() {
                 for (int j = start_col; j < start_col + 3; j++) {
                     // For a given spot (i, j), one variable per digit k
                     //bdds = BDD[10]; // 0th index will be empty
-                    Vector<BDD> bdds;
+                    vector<BDD> bdds;
                     for (int k = 1; k <= 9; k++) {
-                        variableName = int(str(i) + str(j) + str(k));
+                        variableName = 100*i + 10*j + k;
                         bdds.push_back(BDD(variableName));
                         //bdds[i].addVariable(variableName);
                     }
@@ -108,8 +117,9 @@ int main() {
                     }
 
                     // And it with the others
-                    if (rule4 == null) {
+                    if (first) {
                         rule4 = bdds[0];
+                        first = false;
                     } else {
                         rule4.conjunction(bdds[0]);
                     }
@@ -124,5 +134,5 @@ int main() {
     allRules.conjunction(rule3);
     allRules.conjunction(rule4);
 
-    return allRules;
+    cout << allRules;
 }

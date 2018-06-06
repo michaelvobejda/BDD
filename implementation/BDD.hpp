@@ -49,6 +49,7 @@ class BDD {
     friend ostream& operator<<(ostream& os, const BDD& bdd);
 public:
     explicit BDD(int num);
+    BDD();
     ~BDD();
     /* need to implement:
      - satisfy_one

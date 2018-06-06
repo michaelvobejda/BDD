@@ -1,4 +1,4 @@
-CXXFLAGS = -std=c++14 -Wall -Werror -Wpedantic -O0 -g
+CXXFLAGS = -std=c++14 -Wall -Werror -Wpedantic -Ofast -g
 CXX = g++
 
 OBJECTS = BDD.o
@@ -16,4 +16,3 @@ clean:
 	rm -f run-tests explore *.o *~
 
 
-BDD newbdd = bdd1.apply(AND, bdd2);

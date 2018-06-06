@@ -16,6 +16,9 @@ using namespace std;
 #define OR 2
 #define XOR 3
 
+BDD::BDD() {
+    
+}
 BDD::BDD(int num) {
     isNegated = 0;
     //Initialize the BDD by inserting the 0 and 1 terminal nodes.
@@ -87,7 +90,6 @@ Node *BDD::mk(size_t var, Node *lo, Node* hi) {
     }
     auto found = H.find(*n);
     if(found != H.end()) {
-        //free(n);
         return Tree[found->second];
     }
     Tree.push_back(n);
@@ -101,16 +103,7 @@ int BDD::getSize() {
 }
 
 Node *BDD::getRoot() {
-   /* Node *root = Tree[0];
-    size_t minVar = INT_MAX;
-    for(size_t i = 0; i < Tree.size(); i++) {
-        if(Tree[i]->var <= minVar)  {
-            minVar = Tree[i]->var;
-            root = Tree[i];
-        }
-    }*/
     return root;
-//    return Tree[Tree.size()-1];
 }
 
 int operate(int op, int v1, int v2) {
@@ -151,7 +144,6 @@ int operate(int op, int v1, int v2) {
 
 /* Applies a binary operation to two BDDs using dynamic programming */
 Node *BDD::apply(int op, BDD b) {
-//    vector<Node *> newTree;
     vector<vector<Node *>> table(getSize(), vector<Node *>(b.getSize(), NULL));
     Node u1 = *getRoot();
     Node u2 = *(b.getRoot());
@@ -159,8 +151,6 @@ Node *BDD::apply(int op, BDD b) {
     root = returnVal;
     return returnVal;
 }
-
-
 
 Node *BDD::applyHelper(int op, Node u1, Node u2, vector<vector<Node *>>& table) {
     Node *memo = table[u1.id][u2.id];
@@ -214,16 +204,6 @@ bool BDD::solveOneHelper(Node *cur) {
 
 unordered_map<size_t, bool> BDD::solveOne() {
     Node * root = getRoot();
-//    Node *root = Tree[0];
-//    size_t minVar = INT_MAX;
-//    for(size_t i = 0; i < Tree.size(); i++) {
-//        if(Tree[i]->var <= minVar)  {
-//            minVar = Tree[i]->var;
-//            root = Tree[i];
-//        }
-//    }
-//    cout << "dslf" << minVar << endl;
-    // bool solvable = solveOneHelper(root, assignments);
     solveOneHelper(root);
     return assignments;
 }
