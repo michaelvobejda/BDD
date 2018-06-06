@@ -27,10 +27,10 @@ void and_different_variables() {
 
 void and_five_variables() {
     BDD bdds[5];
-    for(size_t i = 1; i < 5; i++) {
+    for(size_t i = 0; i < 5; i++) {
         bdds[i].addVariable(i+2);
     }
-    for(size_t i = 1; i < 4; i++) {
+    for(size_t i = 0; i < 4; i++) {
         bdds[0].conjunction(bdds[i+1]);
     }
     // cout << bdds[2];
@@ -62,10 +62,10 @@ void or_different_variables() {
 
 void or_five_variables() {
     BDD bdds[5];
-    for(size_t i = 1; i < 5; i++) {
+    for(size_t i = 0; i < 5; i++) {
         bdds[i].addVariable(i+2);
     }
-    for(size_t i = 1; i < 4; i++) {
+    for(size_t i = 0; i < 4; i++) {
         bdds[0].disjunction(bdds[i+1]);
     }
     // cout << bdds[2];
