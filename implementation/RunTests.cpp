@@ -1,6 +1,8 @@
 #include "BDD.hpp"
 #include <iostream>
 #include <fstream>
+#include "cereal/archives/binary.hpp"
+#include <sstream>
 
 using namespace std;
 
@@ -146,6 +148,9 @@ void and_time_test() {
     cout << a << endl;
 }
 
+bool bddComp (BDD i, BDD j) {
+    return (i.root)->var < (j.root)->var; }
+
 int main() {
 //     and_same_variable();
 //    xor_same_variable();
@@ -195,6 +200,7 @@ int main() {
     // Rule 2: Every row contains 1-9 exactly once
     BDD rule2;
     first = true;
+    vector<BDD> rows;
     for (int i = 1; i <= 9; i++) {
         for (int k = 1; k <= 9; k++) {
             variableNameBase = 100*i + k;
@@ -208,16 +214,22 @@ int main() {
             // XOR all 9 variables
             for (int c = 1; c < 9; c++) {
                 bdds[0].eor(bdds[c]);
+                
             }
-
+            rows.push_back(bdds[0]);
             // And it with the others
-            if (first) {
-                rule2 = bdds[0];
-                first = false;
-            } else {
-                rule2.conjunction(bdds[0]);
-            }
+//            if (first) {
+//                rule2 = bdds[0];
+//                first = false;
+//            } else {
+//                rule2.conjunction(bdds[0]);
+//            }
         }
+    }
+    
+    sort(rows.begin(), rows.end(), bddComp);
+    for(size_t i = 0; i < rows.size(); i++) {
+        rule2.conjunction(rows[i]);
     }
     cout << "Rule 2: done" << endl;
     
@@ -286,12 +298,47 @@ int main() {
     }
     cout << "Rule 4: done" << endl;
     
+    
+    
     // And together the 4 rules
     BDD allRules = rule1;
     allRules.conjunction(rule2);
     allRules.conjunction(rule3);
     allRules.conjunction(rule4);
     
-    cout << allRules << endl;
-    cout << "Done!!!";
+    cout << "Enter sudoku string." << endl;
+    string sudoku;
+    getline(cin, sudoku);
+    
+    for(size_t i = 0; i < sudoku.length(); i++) {
+        if(sudoku[i] != '.') {
+            int row = i/10;
+            int col = i%10;
+            int val = sudoku[i];
+            int variableName = 100*row + 10*col + val;
+            allRules.conjunction(BDD(variableName));
+        }
+    }
+    
+    unordered_map<size_t, bool> assignments = allRules.solveOne();
+
+    string boardString = "";
+    vector<int> board(81);
+    for (pair<size_t, bool> element : assignments) {
+        int var = element.first;
+        int row = var / 100;
+        int col = (var / 10) % 10;
+        int val = var % 10;
+        board[row * 9 + col] = val;
+    }
+        
+    for (int i = 0; i < 81; i++) {
+        boardString += to_string(board[i]);
+        if ( ((i+1)%9) == 0) {
+            boardString += "|";
+        }
+    }
+    cout << boardString;
 }
+
+

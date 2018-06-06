@@ -35,12 +35,22 @@ BDD::BDD(int num) {
     root = mk(num, Tree[isNegated], Tree[!isNegated]);
 }
 
+
+
 //to do: implement deconstructor to free all allocated memory
 BDD::~BDD() {
     
 }
 
 ostream& operator<<(ostream& os, const BDD& bdd) {
+ /*   for(size_t i = 0; i < Tree.size(); i++) {
+        Node n = *bdd.Tree[i];
+        os << n->id << " " << n->value << " " << n->var << " " << (n->hi)->id << " " << (n->lo)->id << " ";
+    }
+//    os << bdd.Tree.toString() << " ";
+    os << bdd.root << " ";
+    return os;
+    
     for(size_t i = 0; i < bdd.Tree.size(); i++) {
         int hi = bdd.Tree[i]->hi ? (bdd.Tree[i]->hi)->var : -1;
         int lo = bdd.Tree[i]->lo ? (bdd.Tree[i]->lo)->var : -1;
@@ -48,9 +58,16 @@ ostream& operator<<(ostream& os, const BDD& bdd) {
         if (lo == INT_MAX) lo = (bdd.Tree[i]->lo)->value;
         os << "Var: " << bdd.Tree[i]->var <<  ", Value: " << bdd.Tree[i]->value <<
         ", hi: " << hi << ", low: " << lo << '\n';
-    }
+    }*/
     return os;
 }
+
+/*istream& operator<<(istream& is, const BDD& bdd) {
+    Node n;
+    is >> bdd.Tree;
+    is >> bdd.root;
+    return is;
+}*/
 
 /*
  * Public Functions
@@ -153,8 +170,12 @@ Node *BDD::apply(int op, BDD b) {
 }
 
 Node *BDD::applyHelper(int op, Node u1, Node u2, vector<vector<Node *>>& table) {
-    Node *memo = table[u1.id][u2.id];
+    try {
+    Node *memo = table.at(u1.id).at(u2.id);
     if(memo) return memo;
+    } catch(exception e) {
+        
+    }
     Node * u;
     int result = operate(op, u1.value, u2.value);
     if (result != -1) { // result is a terminal

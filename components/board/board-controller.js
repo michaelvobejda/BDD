@@ -1,5 +1,7 @@
 'use strict';
 
+// var jquery = require('jquery');
+
 BDDapp.controller('BoardController', ['$scope', 
     function($scope) {
 
@@ -107,6 +109,20 @@ BDDapp.controller('BoardController', ['$scope',
                 }
 
             }
+        }
+
+        $scope.solve = function(boardString) {
+            var boardString = $scope.boardToString();
+            $.ajax({
+                type: "POST",
+                url: "/python_eda",
+                data: { param: boardString },
+                success: function(response) {
+                    console.log('response:')
+                    console.log(response);
+                    $scope.loadBoard(response)
+                }
+            });
         }
         
     }]);

@@ -1,4 +1,11 @@
 from pyeda.inter import *
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/python_eda')
+def solve_puzzle(board):
+    return display(solve(board))
+
 
 DIGITS = "123456789"
 
@@ -92,4 +99,3 @@ def solve(grid):
 
 
 # display(solve(grid1))
-display(solve(grid2))

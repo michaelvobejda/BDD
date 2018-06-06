@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <vector>
 #include <unordered_map>
+#include "cereal/archives/binary.hpp"
 
 using namespace std;
 
@@ -44,6 +45,12 @@ struct hash<Node>
     }
 };
 
+/*template<class Archive> // public serialization (normal)
+void serialize(Archive & archive)
+{
+    archive(Tree, root);
+};*/
+
 
 class BDD {
     friend ostream& operator<<(ostream& os, const BDD& bdd);
@@ -61,16 +68,18 @@ public:
     Node *eor(class BDD b);
     void negate();
     std::unordered_map<size_t, bool> solveOne();
+    Node *root;
+    vector<Node*> Tree; //Vector of tree nodes
+
+
     
     
 private:
     bool isNegated;
-    vector<Node*> Tree; //Vector of tree nodes
     unordered_map<Node, size_t> H; //Hash map from node to node index in vector
     Node *mk(size_t var, Node* hi, Node *lo); //Inserts node while making sure there are no duplicates.
     Node *apply(int op, BDD b);
     Node *applyHelper(int op, Node u1, Node u2, vector<vector<Node *>>& table);
-    Node *root;
     unordered_map<size_t, bool> assignments;
     bool solveOneHelper(Node *root);
 };
