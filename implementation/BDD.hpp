@@ -56,11 +56,12 @@ public:
     int getSize();
     Node *conjunction(class BDD b);
     Node *disjunction(class BDD b);
+    void negate();
     void addVariable(int num);
     
     
 private:
-    int numVars;
+    bool isNegated;
     vector<Node*> Tree; //Vector of tree nodes
     unordered_map<Node, size_t> H; //Hash map from node to node index in vector
     Node *mk(size_t var, Node* hi, Node *lo); //Inserts node while making sure there are no duplicates.
