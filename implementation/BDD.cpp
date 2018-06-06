@@ -173,14 +173,22 @@ bool BDD::solveOneHelper(Node *root) {
     if (!root) {
         return false;
     }
+    cout << "root var: " << root->var << endl;
+    cout << "assignments: " << endl;
+    for (pair<size_t, bool> element : assignments) {
+        cout << element.first << " :: " << element.second << endl;
+    }
+
     if (!root->lo && !root->hi) {
         return root->value; // if terminal, return value (0 or 1)
     }
     if (solveOneHelper(root->lo)) {
+        cout << "lo returned true" << endl;
         assignments[(root->lo)->var] = true;
         return true;
     }
     if (solveOneHelper(root->hi)) {
+        cout << "hi returned true" << endl;
         assignments[(root->hi)->var] = true;
         return true;
     } 
