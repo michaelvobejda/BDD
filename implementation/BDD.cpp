@@ -39,6 +39,8 @@ ostream& operator<<(ostream& os, const BDD& bdd) {
     for(size_t i = 0; i < bdd.Tree.size(); i++) {
         int hi = bdd.Tree[i]->hi ? (bdd.Tree[i]->hi)->var : -1;
         int lo = bdd.Tree[i]->lo ? (bdd.Tree[i]->lo)->var : -1;
+        if (hi == INT_MAX) hi = (bdd.Tree[i]->hi)->value;
+        if (lo == INT_MAX) lo = (bdd.Tree[i]->lo)->value;
         os << "Var: " << bdd.Tree[i]->var <<  ", Value: " << bdd.Tree[i]->value <<
         ", hi: " << hi << ", low: " << lo << '\n';
     }
